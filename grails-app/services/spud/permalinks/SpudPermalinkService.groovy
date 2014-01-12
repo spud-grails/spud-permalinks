@@ -28,21 +28,11 @@ class SpudPermalinkService {
   	def objectId   = attachment.id
 
   	// Clear out any permalinks for the destinationUrl
-  	def destinationPerms = SpudPermalink.findAllBySiteIdAndUrlName(siteId,destinationUrl)
-  	destinationPerms?.each { permalink ->
-  		permalink.delete()
-  	}
+    SpudPermalink.where{ siteId == siteId && urlName == destinationUrl}.deleteAll()
 
     // Update old permalinks for attachment to new endpoint
-    def objectPermalinks = SpudPermalink.createCriteria().list {
-      eq('siteId', siteId)
-      eq('attachmentType', objectType)
-      eq('attachmentId', objectId)
-    }
-    objectPermalinks?.each { permalink ->
-      permalink.destinationUrl = destinationUrl
-      permalink.save()
-    }
+    def objectPermalinks = SpudPermalink.where {  attachmentType == objectType && attachmentId == objectId}.updateAll(destinationUrl: destinationUrl)
+
 
   	// Check if permalink already exists
   	def permalink = SpudPermalink.findBySiteIdAndUrlName(siteId,url)
@@ -60,15 +50,11 @@ class SpudPermalinkService {
 		return permalink.save()
   }
 
-  def deletePermalinksForAttachment(attachment,siteId=0) {
+  def deletePermalinksForAttachment(attachment) {
     def objectType =  GrailsNameUtils.getShortName(attachment.class)
     def objectId   = attachment.id
-    def deletions = SpudPermalink.createCriteria().list {
-      eq('siteId', siteId)
-      eq('attachmentType', objectType)
-      eq('attachmentId', objectId)
-    }
-    deletions*.delete()
+    SpudPermalink.where {attachmentType == objectType && attachmentId == objectId}.deleteAll()
+
   }
 
 }
