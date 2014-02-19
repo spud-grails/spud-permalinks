@@ -2,6 +2,9 @@ package spud.permalinks
 
 import grails.transaction.Transactional
 import grails.util.GrailsNameUtils
+import org.hibernate.criterion.CriteriaSpecification
+import grails.plugin.cache.CacheEvict
+import grails.plugin.cache.Cacheable
 
 @Transactional
 class SpudPermalinkService {
@@ -23,6 +26,8 @@ class SpudPermalinkService {
   	return permalinks
   }
 
+
+  @CacheEvict(value='spud.permalinks.site', allEntries=true)
   def createPermalink(url, attachment, destinationUrl,siteId=0) {
   	def objectType =  GrailsNameUtils.getShortName(attachment.class)
   	def objectId   = attachment.id
@@ -50,11 +55,33 @@ class SpudPermalinkService {
 		return permalink.save()
   }
 
+
+  @CacheEvict(value='spud.permalinks.site', allEntries=true)
+  void evictCache() {
+    log.info("Evicting Permalinks Cache")
+  }
+
+  @CacheEvict(value='spud.permalinks.site', allEntries=true)
   def deletePermalinksForAttachment(attachment) {
     def objectType =  GrailsNameUtils.getShortName(attachment.class)
     def objectId   = attachment.id
     SpudPermalink.where {attachmentType == objectType && attachmentId == objectId}.deleteAll()
 
   }
+
+  @Cacheable('spud.permalinks.site')
+  def permalinksForSite(siteId) {
+      def permalinks = SpudPermalink.withCriteria(readOnly:true) {
+        eq('siteId', siteId)
+        resultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP)
+
+        projections {
+          property('siteId','siteId')
+          property('urlName','urlName')
+          property('destinationUrl','destinationUrl')
+        }
+      }
+  }
+
 
 }

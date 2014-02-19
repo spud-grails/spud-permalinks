@@ -3,10 +3,11 @@ import spud.permalinks.*
 import  spud.core.*
 import  spud.security.*
 
-@SpudApp(name="Permalinks", thumbnail="spud/admin/permalinks_thumb.png")
+@SpudApp(name="Permalinks", thumbnail="spud/admin/permalinks_thumb.png",order="90")
 @SpudSecure(['PERMALINKS'])
 class PermalinksController {
 	static namespace = 'spud_admin'
+	def spudPermalinkService
 
 	def index = {
 		def permalinks = SpudPermalink.list([max:25] + params)
@@ -29,6 +30,7 @@ class PermalinksController {
 			permalink.siteId = params.int('siteId')
 		}
 		if(permalink.save(flush:true)) {
+			spudPermalinkService.evictCache()
 			redirect(resource: 'permalinks', action: 'index', namespace: 'spud_admin')
 		} else {
 			flash.error = "Error saving permalink"
@@ -69,6 +71,7 @@ class PermalinksController {
 			render view: '/spud/admin/permalinks/edit', model: [permalink: permalink]
 			return
 		}
+		spudPermalinkService.evictCache()
 		redirect resource: 'permalinks', action: 'index', namespace: 'spud_admin'
 	}
 
@@ -80,7 +83,7 @@ class PermalinksController {
 			return
 		}
 		permalink.delete(flush:true)
-
+		spudPermalinkService.evictCache()
 		redirect resource: 'permalinks', action: 'index', namespace: 'spud_admin'
 	}
 

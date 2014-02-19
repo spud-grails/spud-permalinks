@@ -1,69 +1,58 @@
+/*
+ * Copyright 2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import spud.security.SpudSecurityBridge
+
 class SpudPermalinksGrailsPlugin {
-    // the plugin version
-    def version = "0.1"
-    // the version or versions of Grails the plugin is designed for
+    def version = "0.1.0"
     def grailsVersion = "2.3 > *"
-    // resources that are excluded from plugin packaging
     def pluginExcludes = [
         "grails-app/views/error.gsp"
     ]
+    def title       = "Spud Permalinks Plugin"
+    def author      = "David Estes"
+    def authorEmail = "destes@bcap.com"
+    def description = "Creates a filter for redirecting urls from one location to another and provides an admin interface for defining these permalinks."
+    def documentation = "https://github.com/spud-grails/spud-permalinks"
+    def license = "APACHE"
+    def organization = [name: "Bertram Labs", url: "http://www.bertramlabs.com/"]
+    def issueManagement = [system: "GITHUB", url: "https://github.com/spud-grails/spud-permalinks/issues"]
+    def scm = [url: "https://github.com/spud-grails/spud-permalinks"]
 
-    // TODO Fill in these fields
-    def title = "Spud Permalinks Plugin" // Headline display name of the plugin
-    def author = "Your name"
-    def authorEmail = ""
-    def description = '''\
-Brief summary/description of the plugin.
-'''
 
-    // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/spud-permalinks"
-
-    // Extra (optional) plugin metadata
-
-    // License: one of 'APACHE', 'GPL2', 'GPL3'
-//    def license = "APACHE"
-
-    // Details of company behind the plugin (if there is one)
-//    def organization = [ name: "My Company", url: "http://www.my-company.com/" ]
-
-    // Any additional developers beyond the author specified above.
-//    def developers = [ [ name: "Joe Bloggs", email: "joe@bloggs.net" ]]
-
-    // Location of the plugin's issue tracker.
-//    def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GPMYPLUGIN" ]
-
-    // Online location of the plugin's browseable source code.
-//    def scm = [ url: "http://svn.codehaus.org/grails-plugins/" ]
+    def getWebXmlFilterOrder() {
+        [springSecurityFilterChain: FilterManager.GRAILS_WEB_REQUEST_POSITION - 100]
+    }
 
     def doWithWebDescriptor = { xml ->
-        // TODO Implement additions to web.xml (optional), this event occurs before
-    }
 
-    def doWithSpring = {
-        // TODO Implement runtime spring config (optional)
-    }
+        def filters = xml.filter[0]
+        filters + {
+            'filter' {
+                'filter-name'('SpudPermalinkPluginFilter')
+                'filter-class'('spud.permalinks.PermalinkFilter')
+            }
+        }
 
-    def doWithDynamicMethods = { ctx ->
-        // TODO Implement registering dynamic methods to classes (optional)
-    }
-
-    def doWithApplicationContext = { ctx ->
-        // TODO Implement post initialization spring config (optional)
-    }
-
-    def onChange = { event ->
-        // TODO Implement code that is executed when any artefact that this plugin is
-        // watching is modified and reloaded. The event contains: event.source,
-        // event.application, event.manager, event.ctx, and event.plugin.
-    }
-
-    def onConfigChange = { event ->
-        // TODO Implement code that is executed when the project configuration changes.
-        // The event is the same as for 'onChange'.
-    }
-
-    def onShutdown = { event ->
-        // TODO Implement code that is executed when the application shuts down (optional)
+        def mappings = xml.'filter-mapping'[0]
+        mappings + {
+            'filter-mapping' {
+                'filter-name'('SpudPermalinkPluginFilter')
+                'url-pattern'('/*')
+                dispatcher('REQUEST')
+            }
+        }
     }
 }
