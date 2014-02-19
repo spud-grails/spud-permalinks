@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 import spud.security.SpudSecurityBridge
+import grails.plugin.webxml.FilterManager
+
 
 class SpudPermalinksGrailsPlugin {
     def version = "0.1.0"
@@ -33,7 +35,7 @@ class SpudPermalinksGrailsPlugin {
 
 
     def getWebXmlFilterOrder() {
-        [springSecurityFilterChain: FilterManager.GRAILS_WEB_REQUEST_POSITION - 100]
+        [SpudPermalinkPluginFilter: FilterManager.GRAILS_WEB_REQUEST_POSITION - 100]
     }
 
     def doWithWebDescriptor = { xml ->

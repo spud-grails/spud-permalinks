@@ -21,7 +21,8 @@ grails.project.dependency.resolution = {
     plugins {
         runtime ":spud-core:0.1.0"
         runtime ":cache:1.1.1"
-        provided(":webxml:1.4.1") 
+        compile ':webxml:1.4.1'
+
         build(":release:3.0.1",
               ":rest-client-builder:1.0.3") {
             export = false
