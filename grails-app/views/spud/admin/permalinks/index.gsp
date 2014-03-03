@@ -6,7 +6,7 @@
 
 <content tag="detail">
   <p class="lead">Permalinks allow you to define a url that can be redirected to another location. Useful for moving pages and content without sacrificing SEO.</p>
-    <table class="admin-table data-table" id="usertable">
+    <table class="admin-table table-striped table-responsive" id="usertable">
     <thead>
       <tr>
         <th>Source Url</th>
@@ -26,21 +26,16 @@
           <td>${permalink.dateCreated}</td>
           <td align="right">
             <g:if test="${!permalink.attachmentType}">
-              <spAdmin:link action="edit" id="${permalink.id}" title="Edit ${permalink.urlName}" class="btn">Edit</spAdmin:link>
+              <spAdmin:link action="edit" id="${permalink.id}" title="Edit ${permalink.urlName}" class="btn btn-sm btn-link">Edit</spAdmin:link>
             </g:if>
-            <spAdmin:link resource="permalinks" action="delete" data-method="DELETE" id="${permalink.id}" data-confirm="Are you sure you want to remove this permalink?" class="btn btn-danger">Remove</spAdmin:link>
+            <spAdmin:link resource="permalinks" action="delete" data-method="DELETE" id="${permalink.id}" data-confirm="Are you sure you want to remove this permalink?" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></spAdmin:link>
           </td>
         </tr>
       </g:each>
     </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="6">
-          <g:paginate controller="permalinks" action="index" namespace="spud_admin" method="delete" total="${permalinkCount}" max="25" />
-        </td>
-      </tr>
-    </tfoot>
+    
   </table>
+  <g:paginate controller="permalinks" action="index" namespace="spud_admin" method="delete" total="${permalinkCount}" max="25" />
 </content>
 
 </g:applyLayout>

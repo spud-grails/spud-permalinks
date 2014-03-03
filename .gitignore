@@ -1,4 +1,7 @@
 target/
 plugin.xml
 .DS_Store
+*.zip
+*.log
+
 
