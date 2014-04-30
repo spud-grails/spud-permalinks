@@ -22,6 +22,8 @@ class SpudPermalink {
   }
 
 	static mapping = {
+		def cfg = it?.getBean('grailsApplication')?.config
+        datasource(cfg?.spud?.core?.datasource ?: 'DEFAULT')
 		table 'spud_permalinks'
 		autoTimestamp true
 		dateCreated column: 'created_at'

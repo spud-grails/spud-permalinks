@@ -19,7 +19,7 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        runtime ":spud-core:0.2.0"
+        runtime ":spud-core:0.3.0"
         runtime ":cache:1.1.1"
         compile ':webxml:1.4.1'
 
@@ -30,4 +30,4 @@ grails.project.dependency.resolution = {
     }
 }
 
-// grails.plugin.location."spud-core" = "../spud-core"
+//grails.plugin.location."spud-core" = "../spud-core"
