@@ -19,7 +19,7 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        runtime ":spud-core:0.3.0"
+        runtime ":spud-core:0.4.0"
         runtime ":cache:1.1.1"
         compile ':webxml:1.4.1'
 
