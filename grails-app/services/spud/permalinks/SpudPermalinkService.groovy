@@ -1,13 +1,13 @@
 package spud.permalinks
 
-import grails.transaction.Transactional
+
 import grails.util.GrailsNameUtils
 import org.hibernate.criterion.CriteriaSpecification
 import grails.plugin.cache.CacheEvict
 import grails.plugin.cache.Cacheable
 
-@Transactional
 class SpudPermalinkService {
+  static transactional = false
   def permalinkForUrl(url, siteId=0) {
     def permalink = SpudPermalink.findBySiteIdAndUrlName(siteId,url)
     return permalink
