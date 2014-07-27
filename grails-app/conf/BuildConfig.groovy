@@ -19,9 +19,13 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        runtime ":spud-core:0.4.0"
-        runtime ":cache:1.1.1"
+        runtime ":spud-core:0.5.1"
+        runtime ":cache:1.1.7"
         compile ':webxml:1.4.1'
+
+        runtime(':hibernate4:4.3.5.4') {
+            export = false
+        }
 
         build(":release:3.0.1",
               ":rest-client-builder:1.0.3") {
@@ -30,4 +34,4 @@ grails.project.dependency.resolution = {
     }
 }
 
-//grails.plugin.location."spud-core" = "../spud-core"
+// grails.plugin.location."spud-core" = "../spud-core"

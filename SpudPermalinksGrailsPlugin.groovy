@@ -17,7 +17,7 @@ import grails.plugin.webxml.FilterManager
 
 
 class SpudPermalinksGrailsPlugin {
-    def version = "0.4.1"
+    def version = "0.5.0"
     def grailsVersion = "2.3 > *"
     def pluginExcludes = [
         "grails-app/views/error.gsp"
