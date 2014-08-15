@@ -25,11 +25,11 @@ class PermalinkFilter implements Filter {
 		}
 
 		if(permalinkUri.size() > 0) {
-    		def siteId = 0
+    		def siteId = request.getAttribute('spudSiteId')
 
 			permalinks = permalinkService.permalinksForSite(siteId)
 			if(permalinks) {
-				permalinks = permalinks.findAll { 
+				permalinks = permalinks.findAll {
 					if(permalinkUri.startsWith("/") && permalinkUri.size() > 1) {
 						it.urlName == permalinkUri || it.urlName == permalinkUri.substring(1)
 					} else {
@@ -38,7 +38,7 @@ class PermalinkFilter implements Filter {
 				}
 			}
 		}
-		
+
 
 		if(permalinks) {
 		    def permalink = permalinks[0]

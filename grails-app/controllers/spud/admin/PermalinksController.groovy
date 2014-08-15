@@ -8,9 +8,12 @@ import  spud.security.*
 class PermalinksController {
 	static namespace = 'spud_admin'
 	def spudPermalinkService
+	def spudMultiSiteService
 
 	def index = {
-		def permalinks = SpudPermalink.list([max:25] + params)
+		def permalinks = SpudPermalink.createCriteria().list([max:25] + params) {
+			eq('siteId',spudMultiSiteService.activeSite.siteId)
+		}
 		render view: '/spud/admin/permalinks/index', model:[permalinks: permalinks, permalinkCount: SpudPermalink.count()]
 	}
 
@@ -26,9 +29,8 @@ class PermalinksController {
 		}
 
 		def permalink = new SpudPermalink(params.permalink)
-		if(params.int('siteId')) {
-			permalink.siteId = params.int('siteId')
-		}
+		permalink.siteId = spudMultiSiteService.activeSite.siteId
+
 		if(permalink.save(flush:true)) {
 			spudPermalinkService.evictCache()
 			redirect(resource: 'permalinks', action: 'index', namespace: 'spud_admin')
@@ -66,6 +68,8 @@ class PermalinksController {
 			}
 		}
 
+		permalink.siteId = spudMultiSiteService.activeSite.siteId
+
 		if(!permalink.save(flush:true)) {
 			flash.error = "Error Saving Permalink"
 			render view: '/spud/admin/permalinks/edit', model: [permalink: permalink]
@@ -95,7 +99,7 @@ class PermalinksController {
 			return null
 		}
 
-		def siteId = params.int('siteId') ?: 0
+		def siteId = spudMultiSiteService.activeSite.siteId
 		def permalink = SpudPermalink.findBySiteIdAndId(siteId,params.id)
 		if(!permalink) {
 			flash.error = "Permalink not found!"
