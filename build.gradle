@@ -61,7 +61,7 @@ dependencies {
     compile "org.grails:grails-web-boot"
     compile "org.grails.plugins:cache"
     compile "org.grails.plugins:scaffolding"
-	compile "spud.core:spud-core:3.0.0-SNAPSHOT"
+	compile "spud.core:spud-core:3.3.0-SNAPSHOT"
 	compile "org.grails.plugins:hibernate5"
 	compile "org.hibernate:hibernate-core:5.1.5.Final"
 	compile "org.hibernate:hibernate-ehcache:5.1.5.Final"
