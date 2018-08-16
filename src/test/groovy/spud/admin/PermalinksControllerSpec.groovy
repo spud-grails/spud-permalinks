@@ -1,13 +1,12 @@
 package spud.admin
 
-import grails.test.mixin.TestFor
+import grails.testing.web.controllers.ControllerUnitTest
 import spock.lang.Specification
 
 /**
- * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
+ * See the API for {@link grails.testing.web.controllers.ControllerUnitTest} for usage instructions
  */
-@TestFor(PermalinksController)
-class PermalinksControllerSpec extends Specification {
+class PermalinksControllerSpec extends Specification implements ControllerUnitTest<PermalinksController> {
 
     def setup() {
     }

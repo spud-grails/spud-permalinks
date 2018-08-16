@@ -1,13 +1,12 @@
 package spud.permalinks
 
-import grails.test.mixin.TestFor
+import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
 /**
- * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
+ * See the API for {@link grails.testing.services.ServiceUnitTest} for usage instructions
  */
-@TestFor(SpudPermalinkService)
-class SpudPermalinkServiceSpec extends Specification {
+class SpudPermalinkServiceSpec extends Specification implements ServiceUnitTest<SpudPermalinkService> {
 
     def setup() {
     }
