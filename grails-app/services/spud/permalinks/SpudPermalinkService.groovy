@@ -3,8 +3,10 @@ package spud.permalinks
 import grails.util.GrailsNameUtils
 import grails.plugin.cache.CacheEvict
 import grails.plugin.cache.Cacheable
+import groovy.util.logging.Slf4j
 import org.hibernate.criterion.CriteriaSpecification
 
+@Slf4j
 class SpudPermalinkService {
   static transactional = false
   def permalinkForUrl(url, siteId=0) {

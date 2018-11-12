@@ -26,15 +26,17 @@ class PermalinkFilter implements Filter {
 		log.debug "doFilter redirectUrl: ${redirectUrl}"
 		log.debug "doFilter request.contextPath: ${request.contextPath}"
 		if(request.contextPath && request.contextPath != "/") {
-			log.debug "doFilterInternal request.contextPath: ${request.contextPath}"
+			log.debug "doFilter request.contextPath: ${request.contextPath}"
 			permalinkUri = permalinkUri.substring(request.contextPath.size())
 		}
-
+		log.debug "doFilter permalinkUri: ${permalinkUri}"
 		if(permalinkUri.size() > 0) {
 			def siteId = request.getAttribute('spudSiteId')
 			log.debug "doFilter siteId: ${siteId}"
 			permalinks = permalinkService.permalinksForSite(siteId)
+			log.debug "doFilter permalinks for siteId ${siteId}: ${permalinks}"
 			if(permalinks) {
+				log.trace "doFilter permalinks was not null and looking for match for ${permalinkUri}"
 				permalinks = permalinks.findAll {
 					if(permalinkUri.startsWith("/") && permalinkUri.size() > 1) {
 						it.urlName == permalinkUri || it.urlName == permalinkUri.substring(1)
@@ -42,14 +44,17 @@ class PermalinkFilter implements Filter {
 						it.urlName == permalinkUri
 					}
 				}
-				log.debug "doFilter permalinks: ${permalinks}"
+				log.trace "doFilter permalinks after findAll: ${permalinks}"
 			}
+		} else {
+			log.debug "doFilter permalinkUri.size was 0"
 		}
 
 		if(permalinks) {
 			def permalink = permalinks[0]
-			log.debug "doFilter permalink: ${permalink}"
+			log.debug "doFilter permalink[0]: ${permalink}"
 			if(!permalink.destinationUrl.startsWith("/")) {
+				log.debug "permalink.destinationUrl: ${permalink.destinationUrl}"
 				if(permalink.destinationUrl ==~ /(http|https|ftp)\:\/\/.*/) {
 					redirectUrl = permalinks[0].destinationUrl
 				} else {
@@ -60,8 +65,11 @@ class PermalinkFilter implements Filter {
 					redirectUrl =  prefix + permalinks[0].destinationUrl
 				}
 			} else {
+				log.debug "permalink.destinationUrl starts with /"
 				redirectUrl = request.contextPath + permalinks[0].destinationUrl
 			}
+		} else {
+			log.debug "doFilter permalinks was null"
 		}
 
 		if(redirectUrl) {
@@ -69,10 +77,15 @@ class PermalinkFilter implements Filter {
 			response.setHeader('Location', redirectUrl)
 			response.status = 301
 			response.flushBuffer()
+		} else {
+			log.debug "redirectUrl was null"
 		}
 
 		if (!response.committed) {
+			log.trace "doFilter request: ${request}"
 			chain.doFilter(request, response)
+		} else {
+			log.trace "doFilter response.committed: ${response.committed}"
 		}
 	}
 
