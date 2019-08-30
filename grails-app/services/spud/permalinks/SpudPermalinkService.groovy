@@ -1,11 +1,12 @@
 package spud.permalinks
 
-
 import grails.util.GrailsNameUtils
-import org.hibernate.criterion.CriteriaSpecification
 import grails.plugin.cache.CacheEvict
 import grails.plugin.cache.Cacheable
+import groovy.util.logging.Slf4j
+import org.hibernate.criterion.CriteriaSpecification
 
+@Slf4j
 class SpudPermalinkService {
   static transactional = false
   def permalinkForUrl(url, siteId=0) {
@@ -25,7 +26,6 @@ class SpudPermalinkService {
 
   	return permalinks
   }
-
 
   @CacheEvict(value='spud.permalinks.site', allEntries=true)
   def createPermalink(url, attachment, destinationUrl,siteId=0) {
@@ -49,9 +49,6 @@ class SpudPermalinkService {
 		permalink.attachmentId   = objectId
 		permalink.destinationUrl = destinationUrl
 
-
-
-
 		return permalink.save()
   }
 
@@ -71,6 +68,7 @@ class SpudPermalinkService {
 
   @Cacheable('spud.permalinks.site')
   def permalinksForSite(siteId) {
+	  log.debug "permalinksForSite siteId: ${siteId}"
       def permalinks = SpudPermalink.withCriteria(readOnly:true) {
         eq('siteId', siteId)
         resultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP)
@@ -81,6 +79,8 @@ class SpudPermalinkService {
           property('destinationUrl','destinationUrl')
         }
       }
+	  log.debug "permalinksForSite permalinks: ${permalinks}"
+	  return permalinks
   }
 
 

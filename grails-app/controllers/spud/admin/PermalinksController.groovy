@@ -1,12 +1,14 @@
 package spud.admin
-import spud.permalinks.*
-import  spud.core.*
-import  spud.security.*
+
+import spud.core.SpudApp
+import spud.core.SpudSecure
+import spud.permalinks.SpudPermalink
 
 @SpudApp(name="Permalinks", thumbnail="spud/admin/permalinks_thumb.png",order="90")
 @SpudSecure(['PERMALINKS'])
 class PermalinksController {
 	static namespace = 'spud_admin'
+
 	def spudPermalinkService
 	def spudMultiSiteService
 
